@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Artist Name — Prints & Apparel</title>
+    
+    <!-- 
+        ARTIST PORTFOLIO SITE
+        Interactive split layout: left preview panel + right category grid
+        
+        TO CUSTOMIZE WITHOUT CODING:
+        - Change colors in the :root CSS variables below
+        - Replace placeholder text directly in HTML
+        - Swap images by changing src attributes
+        - Add/remove categories by copying .category-box elements
+    -->
+    
+    <style>
+        /* ============================================
+           THEME VARIABLES — Edit these to change look
+           ============================================ */
+        :root {
+            --bg-color: #faf8f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent-color: #c45d3e;
+            --panel-bg: #ffffff;
+            --box-border: #e0ddd8;
+            --hover-shadow: rgba(0, 0, 0, 0.1);
+            --font-main: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           HEADER / NAVIGATION
+           ============================================ */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--box-border);
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: var(--accent-color);
+        }
+
+        /* ============================================
+           MAIN SPLIT LAYOUT
+           ============================================ */
+        .main-container {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* ============================================
+           LEFT PREVIEW PANEL (1/3 width)
+           ============================================ */
+        .preview-panel {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--hover-shadow);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .preview-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.4s ease;
+        }
+
+        .preview-info {
+            padding: 1.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .preview-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .preview-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.3s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #b34f33;
+            transform: translateY(-1px);
+        }
+
+        /* ============================================
+           RIGHT CATEGORY GRID (2/3 width)
+           ============================================ */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-content: start;
+        }
+
+        .category-box {
+            background: var(--panel-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--box-border);
+            position: relative;
+        }
+
+        .category-box:hover,
+        .category-box:focus {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px var(--hover-shadow);
+            border-color: var(--accent-color);
+        }
+
+        .category-box.active {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(196, 93, 62, 0.2);
+        }
+
+        /* Varying sizes for visual interest */
+        .category-box.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .category-box.tall {
+            grid-row: span 2;
+        }
+
+        .category-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .category-box:hover .category-image {
+            transform: scale(1.05);
+        }
+
+        .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            padding: 1rem;
+            color: white;
+        }
+
+        .category-name {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .category-count {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* ============================================
+           FOOTER / CONTACT SECTION
+           ============================================ */
+        footer {
+            background: var(--panel-bg);
+            border-top: 1px solid var(--box-border);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .artist-statement h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .artist-statement p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .contact-form h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--box-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .preview-panel {
+                position: relative;
+                top: 0;
+                order: -1;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .category-box.large {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-box.large,
+            .category-box.tall {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+        }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-box {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Staggered animation delays */
+        .category-box:nth-child(1) { animation-delay: 0.1s; }
+        .category-box:nth-child(2) { animation-delay: 0.2s; }
+        .category-box:nth-child(3) { animation-delay: 0.3s; }
+        .category-box:nth-child(4) { animation-delay: 0.4s; }
+        .category-box:nth-child(5) { animation-delay: 0.5s; }
+        .category-box:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header role="banner">
+        <div class="header-content">
+            <a href="#" class="logo" aria-label="Home">Your Artist Name</a>
+            <nav role="navigation" aria-label="Main navigation">
+                <ul>
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-container" id="work">
+        
+        <!-- LEFT: Preview Panel (changes on click) -->
+        <aside class="preview-panel" aria-live="polite" aria-label="Product preview">
+            <img src="https://picsum.photos/600/800?random=1" 
+                 alt="Featured artwork preview" 
+                 class="preview-image" id="previewImage">
+            <div class="preview-info">
+                <h2 class="preview-title" id="previewTitle">Select a piece</h2>
+                <p class="preview-description" id="previewDescription">
+                    Click any item on the right to see details here. 
+                    This panel updates dynamically as you browse.
+                </p>
+                <div class="preview-price" id="previewPrice"></div>
+                <button class="btn-primary" id="addToCartBtn">Add to Cart</button>
+            </div>
+        </aside>
+
+        <!-- RIGHT: Category Grid -->
+        <section aria-label="Product categories">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Explore My Work</h2>
+            
+            <div class="category-grid" role="list">
+                
+                <!-- Large featured box -->
+                <article class="category-box large active" 
+                         role="listitem"
+                         tabindex="0"
+                         data-title="Original Paintings"
+                         data-description="Hand-painted originals available for purchase. Each piece is unique and signed."
+                         data-price="$250 - $1,500"
+                         data-image="https://picsum.photos/800/600?random=2">
+                    <img src="https://picsum.photos/800/600?random=2" 
+                         alt="Original paintings collection" 
+                         class="category-image">
+                    <div class="category-overlay">
+                        <h3 class="category-name">Original Paintings</h3>
+                        <span class="category-count">12 pieces available</span>
+                    </div>
+                </article>
+
+                <!-- Standard boxes -->
+                <article class="category-box" 
+                         role="listitem"
+                         tabindex="0"
+                         data-title="Art Prints"
+                         data-description="High-quality giclée prints on archival paper. Limited edition runs."
+                         data-price="$35 - $85"
+                         data-image="https://picsum.photos/600/450?random=3">
+                    <img src="https://picsum.photos/600/450?random=3" 
+                         alt="Art prints collection" 
+                         class="category-image">
+                    <div class="category-overlay">
+                        <h3 class="category-name">Art Prints</h3>
+                        <span class="category-count">24 designs</span>
+                    </div>
+                </article>
+
+                <article class="category-box tall" 
+                         role="listitem"
+                         tabindex="0"
+                         data-title="T-Shirts & Apparel"
+                         data-description="My artwork printed on premium cotton tees, hoodies, and more."
+                         data-price="$25 - $65"
+                         data-image="https://picsum.photos/400/800?random=4">
+                    <img src="https://picsum.photos/400/800?random=4" 
+                         alt="Apparel collection" 
+                         class="category-image">
+                    <div class="category-overlay">
+                        <h3 class="category-name">T-Shirts & Apparel</h3>
+                        <span class="category-count">15 styles</span>
+                    </div>
+                </article>
+
+                <article class="category-box" 
+                         role="listitem"
+                         tabindex="0"
+                         data-title="Phone Cases"
+                         data-description="Protect your phone with art. Compatible with iPhone and Android."
+                         data-price="$20 - $30"
+                         data-image="https://picsum.photos/600/450?random=5">
+                    <img src="https://picsum.photos/600/450?random=5" 
+                         alt="Phone case designs" 
+                         class="category-image">
+                    <div class="category-overlay">
+                        <h3 class="category-name">Phone Cases</h3>
+                        <span class="category-count">8 designs</span>
+                    </div>
+                </article>
+
+                <article class="category-box" 
+                         role="listitem"
+                         tabindex="0"
+                         data-title="Tote Bags"
+                         data-description="Reusable canvas totes featuring my artwork. Perfect for markets."
+                         data-price="$18 - $25"
+                         data-image="https://picsum.photos/600/450?random=6">
+                    <img src="https://picsum.photos/600/450?random=6" 
+                         alt="Tote bag designs" 
+                         class="category-image">
+                    <div class="category-overlay">
+                        <h3 class="category-name">Tote Bags</h3>
+                        <span class="category-count">6 designs</span>
+                    </div>
+                </article>
+
+                <article class="category-box" 
+                         role="listitem"
+                         tabindex="0"
+                         data-title="Market Exclusives"
+                         data-description="Special items only available at local art markets and fairs."
+                         data-price="Varies"
+                         data-image="https://picsum.photos/600/450?random=7">
+                    <img src="https://picsum.photos/600/450?random=7" 
+                         alt="Market exclusive items" 
+                         class="category-image">
+                    <div class="category-overlay">
+                        <h3 class="category-name">Market Exclusives</h3>
+                        <span class="category-count">Check upcoming dates</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" role="contentinfo">
+        <div class="footer-content">
+            
+            <!-- Artist Statement -->
+            <div class="artist-statement" id="about">
+                <h2>About Me</h2>
+                <p>
+                    [Your artist statement goes here. Talk about your inspiration, 
+                    process, and what drives your creative work. Keep it authentic 
+                    and personal — customers connect with the story behind the art.]
+                </p>
+                <br>
+                <p>
+                    I sell my work at local markets throughout [your region]. 
+                    Follow me on social media for updates on new pieces and market dates.
+                </p>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h2>Get in Touch</h2>
+                <form action="mailto:your-email@example.com" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required 
+                               aria-required="true" placeholder="Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required 
+                               aria-required="true" placeholder="jane@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="4" required 
+                                  aria-required="true" 
+                                  placeholder="I'd like to inquire about..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ============================================
+        // INTERACTIVE PREVIEW PANEL LOGIC
+        // ============================================
+        
+        const previewImage = document.getElementById('previewImage');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewDescription = document.getElementById('previewDescription');
+        const previewPrice = document.getElementById('previewPrice');
+        const categoryBoxes = document.querySelectorAll('.category-box');
+
+        function updatePreview(box) {
+            // Get data from clicked box
+            const title = box.dataset.title;
+            const description = box.dataset.description;
+            const price = box.dataset.price;
+            const image = box.dataset.image;
+
+            // Update preview panel with fade effect
+            previewImage.style.opacity = '0';
+            
+            setTimeout(() => {
+                previewImage.src = image;
+                previewTitle.textContent = title;
+                previewDescription.textContent = description;
+                previewPrice.textContent = price;
+                previewImage.style.opacity = '1';
+            }, 200);
+
+            // Update active state
+            categoryBoxes.forEach(box => box.classList.remove('active'));
+            box.classList.add('active');
+        }
+
+        // Add click and keyboard event listeners to all category boxes
+        categoryBoxes.forEach(box => {
+            box.addEventListener('click', () => updatePreview(box));
+            
+            box.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    updatePreview(box);
+                }
+            });
+
+            // Optional: Update on hover for desktop
+            box.addEventListener('mouseenter', () => {
+                if (window.innerWidth > 768) {
+                    updatePreview(box);
+                }
+            });
+        });
+
+        // ============================================
+        // SMOOTH SCROLL FOR NAVIGATION
+        // ============================================
+        
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(anchor.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================
+        // TODO NOTES FOR FUTURE ENHANCEMENTS
+        // ============================================
+        
+        // 1. Replace all picsum.photos placeholder images with your actual artwork photos
+        // 2. Update the mailto: address in the form action to your real email
+        // 3. Add your actual artist name, statement, and product details
+        // 4. Consider adding a simple cart system using localStorage
+        // 5. Add social media links to the footer
+    </script>
+
+</body>
+</html>
